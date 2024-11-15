@@ -1,0 +1,27 @@
+@startuml
+' !theme hacker from https://github.com/plantuml/plantuml/raw/refs/heads/master/themes/puml-theme-hacker.puml
+
+start
+
+if (is Chrome >=V127?) then (no)
+	:Ask user to use Chrome >=V127;
+	stop
+else (yes)
+
+repeat
+backward: Show user url to config chrome flags\nto enable gemini nano;
+repeat while (is window.AI available) is (no) not (yes);
+
+:Prompt UI is shown with\nchat and file manager tabs;
+
+repeat
+switch (tab select)
+case (chat)
+	:User is allowed to prompt general questions and file;
+case (file)
+	:tabular UI to manage loaded files;
+endswitch
+repeat while () not (close app);
+
+stop
+@enduml

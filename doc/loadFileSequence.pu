@@ -1,0 +1,45 @@
+@startuml
+actor		User		as	User
+participant PromptUI	as	UI
+participant "langchain\nwrapper" as langchain
+participant "huggingface\nTransfromerJS" as huggingface
+database	TursoDB		as	DB
+participant "gemini nano" as gemini
+
+activate UI #fe42f6
+User -> UI : upload a document file
+UI -> User : Ask file category
+User --> UI : Input file category
+
+group "new Category"
+	UI -> DB : create new category
+	DB --> UI : ack
+	UI --> User: new category has been created
+end
+
+group "Description" [optional]
+	UI -> User: ask for some file short description 
+	User --> UI : Description provided
+end
+
+User -> UI: Submit new file
+
+UI -> langchain : file binary
+activate langchain #eee
+UI -> UI : show processing indicator - rotating circle
+langchain -> langchain : chunking
+langchain -> huggingface : send chunk
+activate huggingface #f3f724
+huggingface -> huggingface : load and run embedding model
+huggingface--> langchain: return chunk's embedding
+deactivate huggingface
+langchain -> DB : save embeddings
+activate DB
+DB --> langchain : ack
+deactivate DB
+langchain --> UI: ack file saved
+
+deactivate langchain
+UI -> User: file processing complete
+
+@enduml

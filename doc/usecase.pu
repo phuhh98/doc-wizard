@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+
+actor User as U
+
+package doc-wizard {
+
+	usecase "Load document locally" as LD
+	usecase "Prompt document" as PD
+}
+
+U --> LD
+U --> PD
+
+PD .r-> LD : <<include>>
+
+@enduml
